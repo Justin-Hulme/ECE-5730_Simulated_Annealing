@@ -2,6 +2,10 @@
 
 #include "Solution.h"
 
+#define INITIAL_TEMPERATURE 1000
+#define COOLING_RATE 0.9999
+#define TEMPERATURE_THRESHOLD
+
 int main(int argc, char* argv) {
 	// Begin
 	// 	generate initial solution
