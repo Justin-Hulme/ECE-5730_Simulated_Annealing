@@ -31,3 +31,7 @@ int Node::get_x(){
 int Node::get_y(){
     return m_x;
 }
+
+int Node::get_id(){
+    return m_id;
+}

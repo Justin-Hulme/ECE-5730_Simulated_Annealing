@@ -11,6 +11,7 @@ public:
     void update_position(int x, int y);
     int get_x();
     int get_y();
+    int get_id();
 private:
     int m_id;
     int m_x;
