@@ -8,12 +8,12 @@
 #define COOLING_RATE 0.9999
 #define TEMPERATURE_THRESHOLD 99.9
 
-int main(int argc, char* argv) {
+int main(int argc, char** argv) {
 	//Begin
 
 	// Assuming good behaving user (there is no error checking)
-	std::string in_file_name = argv[1];
-	std::string out_file_name = argv[2];
+	std::string in_file_name(argv[1]);
+	std::string out_file_name(argv[2]);
 
 	// 	generate initial solution
 	Solution solution(in_file_name);
@@ -24,14 +24,15 @@ int main(int argc, char* argv) {
 	// 	set initial temperature (T)
 	double temperature = INITIAL_TEMPERATURE;
 
+	// set up random
 	std::mt19937 rng(std::random_device{}());
-	std::uniform_int_distribution<int> dist(0, 100);
-	int random_number = dist(rng);
+	std::uniform_real_distribution<> dist(0.0, 1.0);
 
 	// Loop
 	do {
 	// 	generate new solution
-		Solution new_solution = generate_new_solution(solution);
+		Solution new_solution = solution;
+		new_solution.modify();
 
 	// 	score new solution
 		int new_solution_score = new_solution.get_score();
@@ -44,16 +45,16 @@ int main(int argc, char* argv) {
 	// 	Else
 		} else {
 	// 		compute ΔE (ΔE = |scoreold − scorenew|)
-			int delta_E = std::abd(old_solution_score - new_solution_score);
+			int delta_E = std::abs(solution_score - new_solution_score);
 
 	// 		compute acceptance probability p = e^(-ΔE/T)
-			acceptance_probability = std::exp(-delta_E / temperature);
+			double acceptance_probability = std::exp(-delta_E / temperature);
 
 	// 		generate random probability (r)
-			random_number = dist(rng);
+			double random_double = dist(rng);
 
 	// 		If (r ≤ p)
-			if (random_number <= static_cast<int>acceptance_probability * 100) {
+			if (random_double <= acceptance_probability) {
 	// 			replace old solution with new
 				solution = new_solution;
 	// 		EndIf
@@ -65,9 +66,9 @@ int main(int argc, char* argv) {
 		temperature *= COOLING_RATE;
 
 	// EndLoop when T is below threshold
-	} while (T > TEMPERATURE_THRESHOLD);
+	} while (temperature > TEMPERATURE_THRESHOLD);
 
-	output_solution(solution, out_file_name);
+	solution.export_solution(out_file_name);
 
 	//End
 	return 0;

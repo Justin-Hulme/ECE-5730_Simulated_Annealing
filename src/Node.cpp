@@ -22,3 +22,11 @@ void Node::update_position(int x, int y){
     m_x = x;
     m_y = y;
 }
+
+int Node::get_x(){
+    return m_x;
+}
+
+int Node::get_y(){
+    return m_x;
+}
