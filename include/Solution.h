@@ -4,9 +4,17 @@
 #include <string>
 #include "Node.h"
 
+struct edge
+{
+    Node* from;
+    Node* to;
+};
+
+
 class Solution {
 public:
     Solution(const std::string& in_file_name); // used to generate the 1st solution only
+    ~Solution();
     // Solution(std::vector<Node*> old_node_vec); // used to generate all the following solutions
     void modify();
     // justin void update_solution(Solution new_solution);
@@ -16,7 +24,8 @@ public:
     void export_solution(const std::string& file_name);
     void print_solution();
 private:
-    std::vector<Node> m_node_vec;
+    std::vector<Node*> m_node_vec;
+    std::vector<edge> m_edge_vec;
     int m_score;
     int m_width;
     int m_height;
