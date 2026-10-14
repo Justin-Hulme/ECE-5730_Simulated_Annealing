@@ -87,26 +87,20 @@ void Solution::parse_file(const std::string& in_file_name){
 }
 
 void Solution::print_solution(){
+    std::cout << "|";
+    for (int x = 0; x < m_width; x++){
+        std::cout << "-----|";
+    }
+    std::cout << std::endl;
+
     for (int y = 0; y < m_height; y++){
         std::cout << "|";
 
         for (int x = 0; x < m_width; x++){
-            int node_index = -1;
-
-            // search through all the nodes to find the one in this spot
-            for (int k = 0; k < m_vert_num; k++){
-                Node temp_node = m_node_vec.at(k);
-
-                // save the index if the node coordinates match the current coordinates
-                if ((temp_node.get_x() == x) && (temp_node.get_y() == y)){
-                    node_index = k;
-                    break;
-                }
-            }
 
             // print out the node if found or nothing if not
-            if (node_index != -1){
-                std::cout << std::setw(5) << node_index;
+            if (m_node_vec.at(x+ m_width*y).get_id() != -1){
+                std::cout << std::setw(5) << m_node_vec.at(x+ m_width*y).get_id();
             }
             else{
                 std::cout << "     ";
