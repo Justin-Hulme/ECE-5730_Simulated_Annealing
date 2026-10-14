@@ -7,4 +7,5 @@ int main() {
     std::cout << "generated" << std::endl;
 
     sol.print_solution();
+    sol.export_solution("crap.txt");
 }

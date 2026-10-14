@@ -4,7 +4,7 @@
 #include <string>
 #include "Node.h"
 
-struct edge
+struct Edge
 {
     Node* from;
     Node* to;
@@ -25,7 +25,7 @@ public:
     void print_solution();
 private:
     std::vector<Node*> m_node_vec;
-    std::vector<edge> m_edge_vec;
+    std::vector<Edge> m_edge_vec;
     int m_score;
     int m_width;
     int m_height;
