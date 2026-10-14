@@ -46,7 +46,8 @@ void Solution::modify(){
     }
 
     // find the node associated with the second number
-    for (int index_b = 0; i < m_width*m_height - 1; i++) {
+    int index_b;
+    for (index_b = 0; i < m_width*m_height - 1; i++) {
         if (i == grid_rand) {
             Node node_b = m_node_vec.at(i);
             break;
