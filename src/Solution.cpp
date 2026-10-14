@@ -4,9 +4,18 @@
 
 #include "Solution.h"
 
-Solution::Solution(const std::string& in_file_name){
+Solution::Solution(const std::string& in_file_name)
+    : m_rng(std::random_device{}(),
+      node_dist(),
+      grid_dist()
+{
     // open and parse the file
     parse_file(in_file_name);
+
+    // setup random number distribution
+    m_rng(std::random_device{}());
+    node_dist = std::uniform_int_distribution<>(0, m_vert_num);
+    grid_dist = std::uniform_int_distribution<>(0, m_width*m_height - 1);
 
     // score the solution
     // calculate_score();
@@ -19,13 +28,38 @@ Solution::~Solution(){
 }
 
 void Solution::modify(){
+    // get 2 random numbers
+    node_rand = node_dist(m_rng);   // bounded by actual node count
+    grid_rand = grid_dist(m_rng);   // bounded by total grid size
 
-    // minimally modify the solution
+    // find the node associated with the first number
+    int index_a;
+    for (int i = 0; i < static_cast<int>(m_node_vec.size());) {
+        if (m_node_vec.at(i).get_id() >= 0) {
+            if (i == node_rand) {
+                Node node_a = m_node_vec.at(i);
+                index_a = i;
+                break;
+            }
+            i++;
+        }
+    }
+
+    // find the node associated with the second number
+    for (int index_b = 0; i < m_width*m_height - 1; i++) {
+        if (i == grid_rand) {
+            Node node_b = m_node_vec.at(i);
+            break;
+        }
+    }
+
+    // swap the nodes and fix their coordinates
+    node_a.update_position(m_node_vec.at(index_b).get_x(), m_node_vec.at(index_b).get_y());
+    node_b.update_position(m_node_vec.at(index_a).get_x(), m_node_vec.at(index_a).get_y());
+
+    m_node_vec.at(index_a) = node_b;
+    m_node_vec.at(index_b) = node_a;
 }
-
-// Justin void Solution::update_solution(Solution new_solution){
-//     // read in the new solution and update everything
-// }
 
 void Solution::calculate_score(){
     for (int i = 0; i < static_cast<int>(m_node_vec.size()); i++) {

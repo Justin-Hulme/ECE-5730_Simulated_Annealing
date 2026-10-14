@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <random>
 #include "Node.h"
 
 struct Edge
@@ -30,4 +31,7 @@ private:
     int m_width;
     int m_height;
     int m_vert_num;
+    std::mt19937 m_rng;
+    std::uniform_real_distribution<> node_dist;
+    std::uniform_real_distribution<> grid_dist;
 };
