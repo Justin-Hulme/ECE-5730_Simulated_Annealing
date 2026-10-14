@@ -18,12 +18,14 @@ public:
     ~Solution();
     // Solution(std::vector<Node*> old_node_vec); // used to generate all the following solutions
     void modify();
+    void unmodify();
     // justin void update_solution(Solution new_solution);
     void calculate_score();
     int get_score();
     void parse_file(const std::string& in_file_name);
     void export_solution(const std::string& file_name);
     void print_solution();
+    void swap_nodes(const int& index_a, const int& index_b);
 private:
     std::vector<Node*> m_node_vec;
     std::vector<Edge> m_edge_vec;
@@ -31,7 +33,6 @@ private:
     int m_width;
     int m_height;
     int m_vert_num;
-    std::mt19937 m_rng;
-    std::uniform_real_distribution<> node_dist;
-    std::uniform_real_distribution<> grid_dist;
+    int m_index_a;
+    int m_index_b;
 };

@@ -1,65 +1,50 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <utility>
+#include <cstdlib>
 
 #include "Solution.h"
 
-Solution::Solution(const std::string& in_file_name)
-    : m_rng(std::random_device{}(),
-      node_dist(),
-      grid_dist()
-{
+Solution::Solution(const std::string& in_file_name){
     // open and parse the file
     parse_file(in_file_name);
 
-    // setup random number distribution
-    m_rng(std::random_device{}());
-    node_dist = std::uniform_int_distribution<>(0, m_vert_num);
-    grid_dist = std::uniform_int_distribution<>(0, m_width*m_height - 1);
+    srand(0);
 
     // score the solution
     calculate_score();
 }
 
-Solution::~Solution(){
-    for (auto i : m_node_vec){
+Solution::~Solution() {
+    for (auto& i : m_node_vec) {
         delete i;
-    }  
+        i = nullptr;
+    }
 }
 
 void Solution::modify(){
     // get 2 random numbers
-    node_rand = node_dist(m_rng);   // bounded by actual node count
-    grid_rand = grid_dist(m_rng);   // bounded by total grid size
+    int node_rand = rand() % m_vert_num;
+    int grid_rand = rand() % (m_width*m_height);
 
     // find the node associated with the first number
-    int index_a;
-    for (int i = 0; i < static_cast<int>(m_node_vec.size());) {
-        if (m_node_vec.at(i).get_id() >= 0) {
+    for (int i = 0; i < static_cast<int>(m_node_vec.size()); i++) {
+        if (m_node_vec.at(i)->get_id() >= 0) {
             if (i == node_rand) {
-                Node node_a = m_node_vec.at(i);
-                index_a = i;
+                m_index_a = i;
                 break;
             }
-            i++;
         }
     }
 
-    // find the node associated with the second number
-    int index_b;
-    for (index_b = 0; i < m_width*m_height - 1; i++) {
-        if (i == grid_rand) {
-            Node node_b = m_node_vec.at(i);
-            break;
-        }
-    }
+    m_index_b = grid_rand;
 
-    // swap the nodes and fix their coordinates
-    node_a.update_position(m_node_vec.at(index_b).get_x(), m_node_vec.at(index_b).get_y());
-    node_b.update_position(m_node_vec.at(index_a).get_x(), m_node_vec.at(index_a).get_y());
+    swap_nodes(m_index_a, m_index_b);
+}
 
-    m_node_vec.at(index_a) = node_b;
-    m_node_vec.at(index_b) = node_a;
+void Solution::unmodify(){
+    swap_nodes(m_index_a, m_index_b);
 }
 
 void Solution::calculate_score(){
@@ -120,7 +105,7 @@ void Solution::parse_file(const std::string& in_file_name){
         std::getline(file, grid_size_s);
         std::getline(file, vert_num_s);
         std::getline(file, blank);
-        
+
         // parse the first two lines of the file
         sscanf(grid_size_s.c_str(), "g %d %d", &m_width, &m_height);
         sscanf(vert_num_s.c_str(), "v %d", &m_vert_num);
@@ -184,4 +169,24 @@ void Solution::print_solution(){
 
         std::cout << std::endl;
     }
+}
+
+void Solution::swap_nodes(const int& index_a, const int& index_b){
+    Node* node_a_ptr;
+    Node* node_b_ptr;
+    Node* node_temp_ptr = new Node(0, 0, 0);
+
+    // find the node associated with the second number
+    node_a_ptr = m_node_vec.at(index_a);
+    node_b_ptr = m_node_vec.at(index_b);
+
+    // swap the nodes and fix their coordinates
+    node_temp_ptr->update_position(m_node_vec.at(index_a)->get_x(), m_node_vec.at(index_a)->get_y()); // set node temp position to node a position
+    node_a_ptr->update_position(m_node_vec.at(index_b)->get_x(), m_node_vec.at(index_b)->get_y());    // set node a position to node b position
+    node_b_ptr->update_position(node_temp_ptr->get_x(), node_temp_ptr->get_y());    // set node b position to node temp position
+
+    // swap the indexes
+    std::swap(m_node_vec.at(index_a), m_node_vec.at(index_b));
+
+    calculate_score();
 }

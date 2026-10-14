@@ -10,6 +10,7 @@
 
 int main(int argc, char** argv) {
 	//Begin
+	(void) argc;
 
 	// Assuming good behaving user (there is no error checking)
 	std::string in_file_name(argv[1]);
@@ -31,16 +32,18 @@ int main(int argc, char** argv) {
 	// Loop
 	do {
 	// 	generate new solution
-		Solution new_solution = solution;
-		new_solution.modify();
+		// Solution new_solution = solution;
+
+		solution_score = solution.get_score();
+		solution.modify();
 
 	// 	score new solution
-		int new_solution_score = new_solution.get_score();
+		int new_solution_score = solution.get_score();
 
-	// 	If new better than old
-		if (new_solution_score > solution_score){
+	// 	If old better than new
+		if (new_solution_score <= solution_score){
 	// 		replace old solution with new
-			solution = new_solution;
+			solution.unmodify();
 
 	// 	Else
 		} else {
@@ -54,9 +57,9 @@ int main(int argc, char** argv) {
 			double random_double = dist(rng);
 
 	// 		If (r ≤ p)
-			if (random_double <= acceptance_probability) {
+			if (random_double > acceptance_probability) {
 	// 			replace old solution with new
-				solution = new_solution;
+				solution.unmodify();
 	// 		EndIf
 			}
 	// 	EndIf
@@ -64,6 +67,8 @@ int main(int argc, char** argv) {
 
 	// 	lower T
 		temperature *= COOLING_RATE;
+
+		std::cout << temperature << std::endl;
 
 	// EndLoop when T is below threshold
 	} while (temperature > TEMPERATURE_THRESHOLD);
