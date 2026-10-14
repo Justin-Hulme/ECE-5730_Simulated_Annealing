@@ -9,7 +9,7 @@ Solution::Solution(const std::string& in_file_name){
     parse_file(in_file_name);
 
     // score the solution
-    // calculate_score();
+    calculate_score();
 }
 
 Solution::~Solution(){
@@ -28,17 +28,20 @@ void Solution::modify(){
 // }
 
 void Solution::calculate_score(){
-    for (int i = 0; i < static_cast<int>(m_node_vec.size()); i++) {
-        Node* current_node = m_node_vec.at(i);
-        std::vector<Node*> connected_nodes = current_node->get_connected();
+    int score = 0;
 
-        int connected_nodes_count = m_node_vec.size();
-        for (int j = 0; j < connected_nodes_count; j++) {
-            int distance = current_node->distance_to(connected_nodes[j]);
-            int distance_squared = distance * distance;
-            m_score += distance_squared;
-        }
+    // loop through all the edges
+    for (auto edge : m_edge_vec) {
+        // calculate the distance squared       
+        int distance = edge.from->distance_to(edge.to);
+        int distance_sq = distance * distance; 
+        
+        // update the score
+        score += distance_sq;
     }
+
+    // save the score
+    m_score = score;
 }
 
 int Solution::get_score(){
@@ -46,21 +49,28 @@ int Solution::get_score(){
 }
 
 void Solution::export_solution(const std::string& out_file_name){
+    // open file
     std::ofstream out_file(out_file_name);
 
     if (out_file.is_open()){
+        // print the nodes in order
         for (int i = 0; i < m_vert_num; i++){
+            // find the correct node
             for (auto node : m_node_vec){
                 if (node->get_id() == i){
+                    // add it to the file
                     out_file << "Node " << i << " placed at (" << node->get_x() << ", " << node->get_y() << ")\n";
                 }
             }
         }
 
+        // loop through all the edges
         for (auto edge : m_edge_vec){
+            // print the values
             out_file << "Edge from " << edge.from->get_id() << " to " << edge.to->get_id() << " has length " << edge.from->distance_to(edge.to) << "\n";
         }
 
+        // close the file
         out_file.close();
     }
 }
