@@ -5,37 +5,15 @@
 #include "Solution.h"
 
 Solution::Solution(const std::string& in_file_name){
-    // Justin std::vector grid_size = get_grid_size(in_file_name);
-    // m_width = grid_size[0];
-    // m_height = grid_size[1];
-
     // open and parse the file
     parse_file(in_file_name);
-
-    // Justin // generate the solution
-    // int x = 0;
-    // int y = 0;
-    // for (int i = 0; i < static_cast<int>m_node_vec.size_of(); i++) {
-
-    //     m_node_vec[i]->update_position(x, y);
-
-    //     if (x < m_width) {
-    //         x += 1;
-    //     } else {
-    //         x = 0;
-    //         y += 1;
-    //     }
-    // }
 
     // score the solution
     // calculate_score();
 }
 
-// Justin Solution::Solution(std::vector<Node> old_node_vec){
-//     // create a new 
-// }
-
 void Solution::modify(){
+
     // minimally modify the solution
 }
 
@@ -81,8 +59,13 @@ void Solution::parse_file(const std::string& in_file_name){
         sscanf(vert_num_s.c_str(), "v %d", &m_vert_num);
 
         // build the node vector
-        for (int i = 0; i < m_vert_num; i++){
-            m_node_vec.emplace_back(i % m_width, i/m_height); // add the nodes in order, left to right and top to bottom
+        for (int i = 0; i < m_width * m_height; i++){
+            if (i < m_vert_num) {
+                // add the nodes in order, left to right and top to bottom
+                m_node_vec.emplace_back(i % m_width, i/m_height, i);
+            } else {
+                m_node_vec.emplace_back(i % m_width, i/m_height, -1);
+            }
         }
 
         // parse the rest of the file and build the graph
