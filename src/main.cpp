@@ -4,23 +4,22 @@
 
 #include "Solution.h"
 
-#define INITIAL_TEMPERATURE 10000.0
+#define INITIAL_TEMPERATURE 1000000.0
 #define COOLING_RATE 0.9999
-#define TEMPERATURE_THRESHOLD 99.9
+#define TEMPERATURE_THRESHOLD 1.0
 
 int main(int argc, char** argv) {
 	//Begin
 	(void) argc;
 
 	// Assuming good behaving user (there is no error checking)
-	std::string in_file_name(argv[1]);
-	std::string out_file_name(argv[2]);
+	std::string in_file_name("examples_inputs/input2.txt");
+	std::string out_file_name("crap.txt");
 
 	// 	generate initial solution
 	Solution solution(in_file_name);
-
-	// 	score initial solution
-	int solution_score = solution.get_score();
+    std::cout << solution.get_score() << std::endl;
+    // solution.print_solution();
 
 	// 	set initial temperature (T)
 	double temperature = INITIAL_TEMPERATURE;
@@ -29,52 +28,53 @@ int main(int argc, char** argv) {
 	std::mt19937 rng(std::random_device{}());
 	std::uniform_real_distribution<> dist(0.0, 1.0);
 
-	// Loop
-	do {
-	// 	generate new solution
-		// Solution new_solution = solution;
+    int i = 0;
 
-		solution_score = solution.get_score();
-		solution.modify();
+	do {		
+		// generate new solution
+		Solution new_solution = solution;
+		new_solution.modify();
 
-	// 	score new solution
-		int new_solution_score = solution.get_score();
-
-	// 	If old better than new
-		if (new_solution_score <= solution_score){
-	// 		replace old solution with new
-			solution.unmodify();
-
-	// 	Else
+		// If new solution is better than the old solution
+		if (new_solution.get_score() < solution.get_score()){
+			// replace old solution with new
+			// new_solution.print_solution();
+			// std::cout << "\n--------------------------------------------------------------\n" << std::endl;
+            solution = new_solution;
+			// solution.print_solution();
+			// std::cout << std::endl << std::endl;
 		} else {
-	// 		compute ΔE (ΔE = |scoreold − scorenew|)
-			int delta_E = std::abs(solution_score - new_solution_score);
+			// compute ΔE (ΔE = |scoreold − scorenew|)
+			int delta_E = std::abs(solution.get_score() - new_solution.get_score());
 
-	// 		compute acceptance probability p = e^(-ΔE/T)
+			// compute acceptance probability p = e^(-ΔE/T)
 			double acceptance_probability = std::exp(-delta_E / temperature);
 
-	// 		generate random probability (r)
+			// generate random probability (r)
 			double random_double = dist(rng);
 
-	// 		If (r ≤ p)
-			if (random_double > acceptance_probability) {
-	// 			replace old solution with new
-				solution.unmodify();
-	// 		EndIf
+			// If (r ≤ p)
+			if (random_double <= acceptance_probability) {
+				// replace old solution with new
+				// new_solution.print_solution();
+				// std::cout << "\n--------------------------------------------------------------\n" << std::endl;
+				solution = new_solution;
+				// solution.print_solution();
+				// std::cout << std::endl << std::endl;
 			}
-	// 	EndIf
 		}
-
-	// 	lower T
+		// 	lower T
 		temperature *= COOLING_RATE;
 
-		std::cout << temperature << std::endl;
+        i++;
 
 	// EndLoop when T is below threshold
 	} while (temperature > TEMPERATURE_THRESHOLD);
 
 	solution.export_solution(out_file_name);
 
-	//End
+    std::cout << solution.get_score() << " " << i << std::endl;
+    solution.print_solution();
+
 	return 0;
 }

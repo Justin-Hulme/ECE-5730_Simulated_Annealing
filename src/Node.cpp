@@ -7,13 +7,13 @@ Node::Node(const int& x, const int& y, const int& id){
     m_id = id;
 }
 
-void Node::connect_nodes(Node* other_node_ptr){
-    m_connected_nodes.push_back(other_node_ptr);
-}
+// void Node::connect_nodes(Node* other_node_ptr){
+//     m_connected_nodes.push_back(other_node_ptr);
+// }
 
-std::vector<Node*> Node::get_connected(){
-    return m_connected_nodes;
-}
+// std::vector<Node*> Node::get_connected(){
+//     return m_connected_nodes;
+// }
 
 int Node::distance_to(Node* other_node_ptr){
     return abs(m_x - other_node_ptr->m_x) + abs(m_y - other_node_ptr->m_y);
@@ -29,7 +29,7 @@ int Node::get_x(){
 }
 
 int Node::get_y(){
-    return m_x;
+    return m_y;
 }
 
 int Node::get_id(){

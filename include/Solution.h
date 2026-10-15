@@ -16,6 +16,9 @@ class Solution {
 public:
     Solution(const std::string& in_file_name); // used to generate the 1st solution only
     ~Solution();
+    Solution& operator=(const Solution& other);
+    Solution(const Solution& other);
+    void copy_solution(const Solution& other);
     // Solution(std::vector<Node*> old_node_vec); // used to generate all the following solutions
     void modify();
     void unmodify();
