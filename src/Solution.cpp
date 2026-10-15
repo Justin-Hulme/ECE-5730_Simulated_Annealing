@@ -11,14 +11,15 @@ Solution::Solution(const std::string& in_file_name){
     // open and parse the file
     parse_file(in_file_name);
 
+    // seed the random number generator
     srand(time(0));
-    // srand(1);
 
     // score the solution
     calculate_score();
 }
 
 Solution::~Solution() {
+    // free all of the memory for the nodes
     for (auto& i : m_node_vec) {
         delete i;
         i = nullptr;
@@ -40,12 +41,14 @@ Solution& Solution::operator=(const Solution& other){
     // clear the edge vector
     m_edge_vec.clear();
 
+    // copy the data
     copy_solution(other);
 
     return *this;
 }
 
 Solution::Solution(const Solution& other){
+    // copy the data
     copy_solution(other);
 }
 
@@ -115,10 +118,6 @@ void Solution::modify(){
         m_index_b = rand() % (m_width*m_height);
     } while (m_index_b == m_index_a);
 
-    swap_nodes(m_index_a, m_index_b);
-}
-
-void Solution::unmodify(){
     swap_nodes(m_index_a, m_index_b);
 }
 
@@ -215,15 +214,18 @@ void Solution::parse_file(const std::string& in_file_name){
 }
 
 void Solution::print_solution(){
+    // print the top
     std::cout << "|";
     for (int x = 0; x < m_width; x++){
         std::cout << "---------|";
     }
     std::cout << std::endl;
 
+    // loop through the rows
     for (int y = 0; y < m_height; y++){
         std::cout << "|";
 
+        // loop through the columns
         for (int x = 0; x < m_width; x++){
 
             // print out the node if found or nothing if not
@@ -238,6 +240,7 @@ void Solution::print_solution(){
         }
         std::cout << std::endl << "|";
 
+        // print the bottom of the row
         for (int x = 0; x < m_width; x++){
             std::cout << "---------|";
         }
@@ -250,15 +253,17 @@ void Solution::swap_nodes(const int& index_a, const int& index_b){
     Node* node_a_ptr = m_node_vec.at(index_a);
     Node* node_b_ptr = m_node_vec.at(index_b);
 
+    // get the coordinates for a
     int a_x = node_a_ptr->get_x();
     int a_y = node_a_ptr->get_y();
 
-    // swap the nodes and fix their coordinates
+    // swap the nodes coordinates
     node_a_ptr->update_position(node_b_ptr->get_x(), node_b_ptr->get_y());  // set node a position to node b position
     node_b_ptr->update_position(a_x, a_y);                                  // set node b position to node a position
 
-    // swap the indexes
+    // swap the nodes in the graph
     std::swap(m_node_vec.at(index_a), m_node_vec.at(index_b));
 
+    // update the score
     calculate_score();
 }

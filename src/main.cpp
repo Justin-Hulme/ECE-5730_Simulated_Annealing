@@ -4,48 +4,55 @@
 
 #include "Solution.h"
 
-#define INITIAL_TEMPERATURE 1000000.0
-#define COOLING_RATE 0.9999
-#define TEMPERATURE_THRESHOLD 1.0
+#ifndef INITIAL_TEMPERATURE
+	#define INITIAL_TEMPERATURE 1000000.0
+#endif
+
+#ifndef COOLING_RATE
+	#define COOLING_RATE 0.9999
+#endif
+
+#ifndef TEMPERATURE_THRESHOLD
+	#define TEMPERATURE_THRESHOLD 1.0
+#endif
+
 
 int main(int argc, char** argv) {
-	//Begin
-	(void) argc;
+	// make sure we have the right number of arguments
+	if (argc != 3){
+        std::cout << "Too few arguments" << std::endl;
+		return 0;
+    }
 
-	// Assuming good behaving user (there is no error checking)
-	std::string in_file_name("examples_inputs/input2.txt");
-	std::string out_file_name("crap.txt");
+	// get the file names
+	std::string in_file_name(argv[1]);
+	std::string out_file_name(argv[2]);
 
-	// 	generate initial solution
-	Solution solution(in_file_name);
-    std::cout << solution.get_score() << std::endl;
-    // solution.print_solution();
+	// generate initial solution
+	Solution old_solution(in_file_name);
 
-	// 	set initial temperature (T)
+	// set initial temperature (T)
 	double temperature = INITIAL_TEMPERATURE;
 
 	// set up random
 	std::mt19937 rng(std::random_device{}());
 	std::uniform_real_distribution<> dist(0.0, 1.0);
 
-    int i = 0;
+	// track the number of iterations
+    int iterations = 0;
 
 	do {		
 		// generate new solution
-		Solution new_solution = solution;
+		Solution new_solution = old_solution;
 		new_solution.modify();
 
-		// If new solution is better than the old solution
-		if (new_solution.get_score() < solution.get_score()){
+		// if new solution is better than the old solution
+		if (new_solution.get_score() < old_solution.get_score()){
 			// replace old solution with new
-			// new_solution.print_solution();
-			// std::cout << "\n--------------------------------------------------------------\n" << std::endl;
-            solution = new_solution;
-			// solution.print_solution();
-			// std::cout << std::endl << std::endl;
+            old_solution = new_solution;
 		} else {
 			// compute ΔE (ΔE = |scoreold − scorenew|)
-			int delta_E = std::abs(solution.get_score() - new_solution.get_score());
+			int delta_E = std::abs(old_solution.get_score() - new_solution.get_score());
 
 			// compute acceptance probability p = e^(-ΔE/T)
 			double acceptance_probability = std::exp(-delta_E / temperature);
@@ -53,28 +60,27 @@ int main(int argc, char** argv) {
 			// generate random probability (r)
 			double random_double = dist(rng);
 
-			// If (r ≤ p)
+			// if (r ≤ p)
 			if (random_double <= acceptance_probability) {
-				// replace old solution with new
-				// new_solution.print_solution();
-				// std::cout << "\n--------------------------------------------------------------\n" << std::endl;
-				solution = new_solution;
-				// solution.print_solution();
-				// std::cout << std::endl << std::endl;
+				old_solution = new_solution;
 			}
 		}
-		// 	lower T
+		// lower T
 		temperature *= COOLING_RATE;
 
-        i++;
+		// increment the number of iterations
+        iterations++;
 
-	// EndLoop when T is below threshold
+	// endLoop when T is below threshold
 	} while (temperature > TEMPERATURE_THRESHOLD);
 
-	solution.export_solution(out_file_name);
+	// export the solution
+	old_solution.export_solution(out_file_name);
 
-    std::cout << solution.get_score() << " " << i << std::endl;
+#ifdef DEBUG
+    std::cout << solution.get_score() << " " << iterations << std::endl;
     solution.print_solution();
+#endif
 
 	return 0;
 }

@@ -7,15 +7,8 @@ Node::Node(const int& x, const int& y, const int& id){
     m_id = id;
 }
 
-// void Node::connect_nodes(Node* other_node_ptr){
-//     m_connected_nodes.push_back(other_node_ptr);
-// }
-
-// std::vector<Node*> Node::get_connected(){
-//     return m_connected_nodes;
-// }
-
 int Node::distance_to(Node* other_node_ptr){
+    // get the grid distance
     return abs(m_x - other_node_ptr->m_x) + abs(m_y - other_node_ptr->m_y);
 }
 

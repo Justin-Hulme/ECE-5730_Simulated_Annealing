@@ -11,6 +11,7 @@
 int main(int argc, char** argv) {
 	//Begin
 	(void) argc;
+	(void) argv;
 
 	// Assuming good behaving user (there is no error checking)
 	std::string in_file_name("examples_inputs/input2.txt");
