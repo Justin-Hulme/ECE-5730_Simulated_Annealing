@@ -1,24 +1,25 @@
-# ECE-5730_Simulated_Annealing
+# ECE-5730 Lab 4: Simulated Annealing
 
-Algorithm
+## Build Instructions
 
-Begin
-	generate initial solution
-	score initial solution
-	set initial temperature (T)
-	Loop
-		generate new solution
-		score new solution
-		If new better than old
-			replace old solution with new
-		Else
-			compute ΔE (ΔE = |scoreold − scorenew|)
-			compute acceptance probability p = e^(-ΔE/T)
-			generate random probability (r)
-			If (r ≤ p)
-				replace old solution with new
-			EndIf
-		EndIf
-	lower T
-	EndLoop when T is below threshold
-End
+Compile the project using `make`:
+
+```bash
+make build
+```
+
+## Run Instructions
+
+Run the program with an input and output file:
+
+```bash
+./lab_4 <input_file> <output_file>
+```
+
+Replace `<input_file>` and `<output_file>` with the path to your input and output files.
+
+## Example
+
+```bash
+./lab_4 input.txt output.txt
+```
