@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
 	old_solution.export_solution(out_file_name);
 
 #ifdef DEBUG
-    std::cout << solution.get_score() << " " << iterations << std::endl;
+    std::cout << old_solution.get_score() << " " << iterations << std::endl;
     solution.print_solution();
 #endif
 

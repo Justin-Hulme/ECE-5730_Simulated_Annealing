@@ -14,8 +14,8 @@ int main(int argc, char** argv) {
 	std::string in_file_name(argv[1]);
 	std::string out_file_name(argv[2]);
 
-    double INITIAL_TEMPERATURE = std::stod(argv[3]);
-    double COOLING_RATE        = std::stod(argv[4]);
+    double INITIAL_TEMPERATURE   = std::stod(argv[3]);
+    double COOLING_RATE          = std::stod(argv[4]);
     double TEMPERATURE_THRESHOLD = std::stod(argv[5]);
 
 	// generate initial solution
