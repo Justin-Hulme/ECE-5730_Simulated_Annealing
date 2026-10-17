@@ -9,11 +9,11 @@
 #endif
 
 #ifndef COOLING_RATE
-	#define COOLING_RATE 0.9999
+	#define COOLING_RATE 0.999
 #endif
 
 #ifndef TEMPERATURE_THRESHOLD
-	#define TEMPERATURE_THRESHOLD 1.0
+	#define TEMPERATURE_THRESHOLD 0.0001
 #endif
 
 
@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
 
 #ifdef DEBUG
     std::cout << old_solution.get_score() << " " << iterations << std::endl;
-    solution.print_solution();
+    old_solution.print_solution();
 #endif
 
 	return 0;

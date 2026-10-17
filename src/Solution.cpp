@@ -217,7 +217,7 @@ void Solution::print_solution(){
     // print the top
     std::cout << "|";
     for (int x = 0; x < m_width; x++){
-        std::cout << "---------|";
+        std::cout << "------|";
     }
     std::cout << std::endl;
 
@@ -230,10 +230,10 @@ void Solution::print_solution(){
 
             // print out the node if found or nothing if not
             if (m_node_vec.at(x+ m_width*y)->get_id() != -1){
-                std::cout << std::setw(2) << m_node_vec.at(x+ m_width*y)->get_id() << " (" << m_node_vec.at(x+ m_width*y)->get_x() << ", " << m_node_vec.at(x+ m_width*y)->get_y() << ")";
+                std::cout << std::setw(4) << m_node_vec.at(x+ m_width*y)->get_id() << "  ";
             }
             else{
-                std::cout << "         ";
+                std::cout << "      ";
             }
 
             std::cout << "|";
@@ -242,7 +242,7 @@ void Solution::print_solution(){
 
         // print the bottom of the row
         for (int x = 0; x < m_width; x++){
-            std::cout << "---------|";
+            std::cout << "------|";
         }
 
         std::cout << std::endl;
